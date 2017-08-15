@@ -20,15 +20,18 @@ class App extends React.Component{
         this.state = {
             fishes: [],
             order: {},
-            data: []
+            data: [],
+            products: []
         };
 
-        this.loadSamples = this.loadSamples.bind(this);
-        this.loadSamples();
-        console.log("THIS IS IT");
-        console.log(this.state.fishes);
-        this.state.data.push(1);
+        var that = this;
+        
+        this.ApiCall().then( function(r){
+            that.setState({fishes:r});
+
+        });
     }
+
 
     ApiCall() {
 
@@ -59,7 +62,7 @@ class App extends React.Component{
          }
 
      getFunction = () => {
-         this.ApiCall();
+         return this.ApiCall().then(r => r);
      }
 
 
@@ -116,13 +119,6 @@ class App extends React.Component{
     }
 
 
-    loadSamples(){
-        this.setState({
-            fishes: this.getFunction()
-        })
-        console.log(this.state.fishes);
-    }
-
     addToOrder(key){
         // takes a copy of the existing fishes
         const order = {...this.state.order};
@@ -145,11 +141,6 @@ class App extends React.Component{
                 {/*Hello*/}
                 <div className="menu">
                     <Header tagline="Fresh Seafood Market"/>
-                        <button id='b1'
-                           style={{fontSize: 20, color: 'green'}}
-                           onClick={() => this.getFunction()}>
-                        Get
-                        </button>
                     <ul className="list-of-fishes">
                         {
                             Object.keys(this.state.fishes)
@@ -168,9 +159,7 @@ class App extends React.Component{
                     />
                 {/*We have to send this to Inventory*/}
                 <Inventory addFish={this.addFish}
-                 loadSamples={this.loadSamples}
-                 fishes={this.loadSamples()}
-                 data={this.state.data}
+                 fishes={this.state.fishes}
                  updateFish = {this.updateFish}
                  removeFish = {this.removeFish}
                  />   

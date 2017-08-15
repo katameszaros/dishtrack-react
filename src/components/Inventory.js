@@ -6,6 +6,8 @@ class Inventory extends React.Component{
         super();
         this.renderInventory = this.renderInventory.bind(this);
         this.handleChange = this.handleChange.bind(this);
+
+        var that = this;
     }
 
     handleChange(e, key){
@@ -39,8 +41,8 @@ class Inventory extends React.Component{
             <div>
                 <h2>Inventory</h2>
                 {this.props.fishes.map(function(fish){
-                    console.log(this.renderInventory(fish));
-                })}
+                    this.renderInventory(fish);
+                }, this)}
                 {/*Now we have to send this to addFishForm*/}
                 <AddFishForm addFish = {this.props.addFish}/>
                 <button onClick={this.props.loadSamples}> Load Sample Fishes </button>
