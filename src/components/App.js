@@ -56,6 +56,32 @@ class App extends React.Component{
 
     }
 
+    ApiSend(fish){
+        console.log("This is the fish: ");
+        console.log(fish);
+            let result = new Promise((resolve, reject) => {
+            let request = new XMLHttpRequest();
+            request.open("POST", "http://localhost:8080/products/addproduct");
+            request.onreadystatechange = () => {
+                let raw = request.responseText;
+                if (request.readyState==4 && request.status==200) {
+                    try {
+                        let objectified = raw;
+                        resolve(objectified);
+                    } catch(er) {
+                        console.log("failed")
+                    }
+                }
+            };
+            console.log("Fish details name: " + fish.name);
+            request.send(JSON.stringify({ name: fish.name, description: fish.description,
+            image: fish.image, price: fish.price  }));
+        });
+        return result;
+
+
+}
+
     componentDidMount()
          {
            this.getFunction();
@@ -96,6 +122,8 @@ class App extends React.Component{
     }
 
     addFish(fish){
+        console.log("WHAAAAT!?");
+        console.log(fish);
         // takes a copy of the existing fishes
         const fishes = {...this.state.fishes};
         //adds the new fish
@@ -103,6 +131,9 @@ class App extends React.Component{
         fishes[`fish-${timestamp}`] = fish;
         //updates fishes
         this.setState({fishes : fishes});
+        this.ApiSend(fish).then(function(param){
+            console.log(param);
+        });
     }
 
 
